@@ -19,7 +19,7 @@ test("Calendar validations", async ({ page }) => {
   await page.locator(`//abbr[text()='${day}']`).click();
 
   const inputs = await page.locator(".react-date-picker__inputGroup input");
-  for (let i = 0; i < inputs.length; ++i) {
+  for (let i = 0; i < inputs.length; i++) {
     const value = inputs[i].getAttribute("value");
     expect(value).toEqual(expectedList[i])
   }
