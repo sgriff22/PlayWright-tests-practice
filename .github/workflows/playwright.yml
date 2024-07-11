@@ -20,7 +20,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test --workers=4
+        run: npx playwright test --workers=4 --browser=chromium
       - uses: actions/upload-artifact@v4
         if: always()
         with:
