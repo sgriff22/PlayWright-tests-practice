@@ -1,4 +1,6 @@
 const { test, expect, request } = require("@playwright/test");
+const { APIUtils } = require("./utils/APIUtils");
+
 const loginPayload = {
   userEmail: "geor@att.net",
   userPassword: "Griffygeol2@",
@@ -6,51 +8,26 @@ const loginPayload = {
 const orderPayLoad = {
   orders: [{ country: "Cuba", productOrderedId: "6581cade9fd99c85e8ee7ff5" }],
 };
-let token;
-let orderId;
+
+let response;
 
 //To use tokens from local storage instead of having to include all login steps
 //Executes before all tests are ran
 test.beforeAll(async () => {
   //Login API
   const apiContext = await request.newContext();
-  //Api calls - POST
-  const loginResponse = await apiContext.post(
-    "https://rahulshettyacademy.com/api/ecom/auth/login",
-    {
-      data: loginPayload,
-    }
-  );
-  //Assertion to make sure login was successful
-  expect(loginResponse.ok()).toBeTruthy();
-
-  //Still have to grab the whole json response body
-  const loginResponseJson = await loginResponse.json();
-  //get token value from json body/object
-  token = loginResponseJson.token;
-  console.log(token);
-
-  //Create order API
-  const orderResponse = await apiContext.post(
-    "https://rahulshettyacademy.com/api/ecom/order/create-order",
-    {
-      data: orderPayLoad,
-      headers: { Authorization: token, "Content-Type": "application/json" },
-    }
-  );
-  const orderResponseJson = await orderResponse.json();
-  console.log(orderResponseJson);
-  orderId = orderResponseJson.orders[0];
+  const apiUtils = new APIUtils(apiContext, loginPayload);
+  response = await apiUtils.createOrder(orderPayLoad);
 });
 
 //Execute this before each test if more than one test
-test.beforeEach(() => {});
+// test.beforeEach(() => {});
 
 test("Place the order", async ({ page }) => {
   page.addInitScript((value) => {
     //add to token to local storage
     window.localStorage.setItem("token", value);
-  }, token);
+  }, response.token);
 
   await page.goto("https://rahulshettyacademy.com/client/");
 
@@ -61,7 +38,7 @@ test("Place the order", async ({ page }) => {
 
   for (let i = 0; i < (await rows.count()); ++i) {
     const rowOrderId = await rows.nth(i).locator("th").textContent();
-    if (orderId.includes(rowOrderId)) {
+    if (response.orderId.includes(rowOrderId)) {
       await rows.nth(i).locator("button").first().click();
       break;
     }
@@ -69,5 +46,5 @@ test("Place the order", async ({ page }) => {
 
   //Confirm that you are brought to order summary view
   const orderIdDetails = await page.locator(".col-text").textContent();
-  expect(orderId.includes(orderIdDetails)).toBeTruthy();
+  expect(response.orderId.includes(orderIdDetails)).toBeTruthy();
 });
