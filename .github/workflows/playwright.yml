@@ -10,6 +10,10 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        worker-index: [1, 2, 3, 4]
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
