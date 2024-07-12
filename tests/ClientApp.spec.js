@@ -49,25 +49,25 @@ test(
     //Click Checkout button
     await page.locator("text=Checkout").click();
 
-    //ADD PAYMENT INFORMATION
-    // ---Expiry Date---
-    const monthSelect = page.locator("select").first();
-    await monthSelect.selectOption({ value: "03" });
-    const daySelect = page.locator("select").last();
-    await daySelect.selectOption({ value: "29" });
+    // //ADD PAYMENT INFORMATION
+    // // ---Expiry Date---
+    // const monthSelect = page.locator("select").first();
+    // await monthSelect.selectOption({ value: "03" });
+    // const daySelect = page.locator("select").last();
+    // await daySelect.selectOption({ value: "29" });
 
-    // ---CVV Code---
-    const cvvInput = page.locator(".field.small").nth(1).locator("input");
-    await cvvInput.fill("717");
+    // // ---CVV Code---
+    // const cvvInput = page.locator(".field.small").nth(1).locator("input");
+    // await cvvInput.fill("717");
 
-    // ---Name on Card---
-    const nameInput = page.locator(".field").nth(3).locator("input");
-    await nameInput.fill("George E Griffy");
+    // // ---Name on Card---
+    // const nameInput = page.locator(".field").nth(3).locator("input");
+    // await nameInput.fill("George E Griffy");
 
-    // ---Apply Coupon---
-    const couponInput = page.locator("input[name='coupon']");
-    await couponInput.fill("rahulshettyacademy");
-    await page.locator("button:has-text('Apply Coupon')").click();
+    // // ---Apply Coupon---
+    // const couponInput = page.locator("input[name='coupon']");
+    // await couponInput.fill("rahulshettyacademy");
+    // await page.locator("button:has-text('Apply Coupon')").click();
 
     //SHIPPING INFORMATION
     // ---Check that email is correct---
